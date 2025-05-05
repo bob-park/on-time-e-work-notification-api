@@ -8,7 +8,9 @@ import org.springframework.context.annotation.Configuration;
 import com.malgn.cqrs.event.handler.DelegatingCommandHandler;
 import com.malgn.notification.client.NotificationClient;
 
-import org.bobpark.domain.document.command.handler.DocumentNotificationCommandHandler;
+import org.bobpark.domain.document.command.handler.DocumentApprovedCommandHandler;
+import org.bobpark.domain.document.command.handler.DocumentRejectedCommandHandler;
+import org.bobpark.domain.document.command.handler.DocumentRequestedCommandHandler;
 import org.bobpark.domain.user.feign.UserFeignClient;
 
 @RequiredArgsConstructor
@@ -23,8 +25,11 @@ public class AppConfiguration {
 
         DelegatingCommandHandler handler = new DelegatingCommandHandler<>();
 
-        handler.add(new DocumentNotificationCommandHandler(notificationClient, userClient));
+        handler.add(new DocumentRequestedCommandHandler(notificationClient, userClient));
+        handler.add(new DocumentApprovedCommandHandler(notificationClient, userClient));
+        handler.add(new DocumentRejectedCommandHandler(notificationClient, userClient));
 
         return handler;
     }
+
 }

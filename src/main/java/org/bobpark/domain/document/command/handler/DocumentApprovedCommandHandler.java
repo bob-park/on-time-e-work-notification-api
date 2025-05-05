@@ -8,23 +8,23 @@ import com.malgn.cqrs.event.handler.CommandHandler;
 import com.malgn.notification.client.NotificationClient;
 import com.malgn.notification.model.SendNotificationMessageRequest;
 
+import org.bobpark.domain.document.event.DocumentApprovedEventPayload;
 import org.bobpark.domain.document.event.DocumentEventType;
-import org.bobpark.domain.document.event.DocumentRequestedEventPayload;
 import org.bobpark.domain.document.type.DocumentType;
 import org.bobpark.domain.user.feign.UserFeignClient;
 import org.bobpark.domain.user.model.UserResponse;
 
 @Slf4j
 @RequiredArgsConstructor
-public class DocumentNotificationCommandHandler implements CommandHandler<DocumentRequestedEventPayload> {
+public class DocumentApprovedCommandHandler implements CommandHandler<DocumentApprovedEventPayload> {
 
     private final NotificationClient notificationClient;
     private final UserFeignClient userClient;
 
     @Override
-    public void handle(Event<DocumentRequestedEventPayload> event) {
+    public void handle(Event<DocumentApprovedEventPayload> event) {
 
-        DocumentRequestedEventPayload payload = event.getPayload();
+        DocumentApprovedEventPayload payload = event.getPayload();
 
         DocumentType type = payload.type();
 
@@ -36,12 +36,11 @@ public class DocumentNotificationCommandHandler implements CommandHandler<Docume
             SendNotificationMessageRequest.builder()
                 .displayMessage(displayMessage(type, user))
                 .build());
-
     }
 
     @Override
-    public boolean supports(Event<DocumentRequestedEventPayload> event) {
-        return event.getType() == DocumentEventType.DOCUMENT_REQUESTED;
+    public boolean supports(Event<DocumentApprovedEventPayload> event) {
+        return event.getType() == DocumentEventType.DOCUMENT_APPROVED;
     }
 
     private String displayMessage(DocumentType type, UserResponse user) {
@@ -55,9 +54,8 @@ public class DocumentNotificationCommandHandler implements CommandHandler<Docume
             .append(user.position().name())
             .append("이(가) ")
             .append(type.getDocumentName())
-            .append("을(를) 신청하였습니다.");
+            .append("을(를) 승인되었습니다.");
 
         return builder.toString();
     }
-
 }

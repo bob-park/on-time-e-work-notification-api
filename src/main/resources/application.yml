@@ -78,6 +78,8 @@ malgn:
     enabled: on
     host: ${notification_host:http://localhost:8080}
 
+
+
 ## logging
 logging:
   charset:
