@@ -6,6 +6,7 @@ import org.bobpark.domain.document.type.DocumentType;
 
 public record DocumentRequestedEventPayload(Long id,
                                             DocumentType type,
-                                            String userUniqueId)
+                                            String userUniqueId,
+                                            String receiveUserUniqueId)
     implements EventPayload {
 }
