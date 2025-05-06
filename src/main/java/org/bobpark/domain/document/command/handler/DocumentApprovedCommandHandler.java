@@ -10,6 +10,8 @@ import com.malgn.notification.model.SendNotificationMessageRequest;
 
 import org.bobpark.domain.document.event.DocumentApprovedEventPayload;
 import org.bobpark.domain.document.event.DocumentEventType;
+import org.bobpark.domain.document.feign.DocumentFeignClient;
+import org.bobpark.domain.document.model.VacationDocumentResponse;
 import org.bobpark.domain.document.type.DocumentType;
 import org.bobpark.domain.user.feign.UserFeignClient;
 import org.bobpark.domain.user.model.UserResponse;
@@ -20,6 +22,7 @@ public class DocumentApprovedCommandHandler implements CommandHandler<DocumentAp
 
     private final NotificationClient notificationClient;
     private final UserFeignClient userClient;
+    private final DocumentFeignClient documentClient;
 
     @Override
     public void handle(Event<DocumentApprovedEventPayload> event) {
@@ -36,6 +39,14 @@ public class DocumentApprovedCommandHandler implements CommandHandler<DocumentAp
             SendNotificationMessageRequest.builder()
                 .displayMessage(displayMessage(type, user))
                 .build());
+
+        // vacation 인 경우 처리 google calendar 에 추가
+        if (type == DocumentType.VACATION) {
+            VacationDocumentResponse document = documentClient.getVacationDocument(payload.id());
+
+            log.debug("document - {}", document);
+        }
+
     }
 
     @Override

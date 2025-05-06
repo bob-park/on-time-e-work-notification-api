@@ -1,0 +1,10 @@
+services:
+  e-work-notification-api:
+    container_name: on-time-e-work-notification-api
+    image: ghcr.io/bob-park/on-time-e-work-notification-api
+    build:
+      dockerfile: ./Dockerfile
+      x-bake:
+        platforms:
+          - linux/amd64
+          - linux/arm64

@@ -11,6 +11,7 @@ import com.malgn.notification.client.NotificationClient;
 import org.bobpark.domain.document.command.handler.DocumentApprovedCommandHandler;
 import org.bobpark.domain.document.command.handler.DocumentRejectedCommandHandler;
 import org.bobpark.domain.document.command.handler.DocumentRequestedCommandHandler;
+import org.bobpark.domain.document.feign.DocumentFeignClient;
 import org.bobpark.domain.user.feign.UserFeignClient;
 
 @RequiredArgsConstructor
@@ -19,6 +20,7 @@ public class AppConfiguration {
 
     private final NotificationClient notificationClient;
     private final UserFeignClient userClient;
+    private final DocumentFeignClient documentClient;
 
     @Bean
     public DelegatingCommandHandler delegatingCommandHandler() {
@@ -26,7 +28,7 @@ public class AppConfiguration {
         DelegatingCommandHandler handler = new DelegatingCommandHandler<>();
 
         handler.add(new DocumentRequestedCommandHandler(notificationClient, userClient));
-        handler.add(new DocumentApprovedCommandHandler(notificationClient, userClient));
+        handler.add(new DocumentApprovedCommandHandler(notificationClient, userClient, documentClient));
         handler.add(new DocumentRejectedCommandHandler(notificationClient, userClient));
 
         return handler;
