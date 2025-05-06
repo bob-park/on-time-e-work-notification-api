@@ -13,6 +13,7 @@ import org.bobpark.domain.document.event.DocumentEventType;
 import org.bobpark.domain.document.feign.DocumentFeignClient;
 import org.bobpark.domain.document.model.VacationDocumentResponse;
 import org.bobpark.domain.document.type.DocumentType;
+import org.bobpark.domain.google.provider.GoogleCalendarProvider;
 import org.bobpark.domain.user.feign.UserFeignClient;
 import org.bobpark.domain.user.model.UserResponse;
 
@@ -23,6 +24,8 @@ public class DocumentApprovedCommandHandler implements CommandHandler<DocumentAp
     private final NotificationClient notificationClient;
     private final UserFeignClient userClient;
     private final DocumentFeignClient documentClient;
+
+    private final GoogleCalendarProvider calendarProvider;
 
     @Override
     public void handle(Event<DocumentApprovedEventPayload> event) {
@@ -44,7 +47,19 @@ public class DocumentApprovedCommandHandler implements CommandHandler<DocumentAp
         if (type == DocumentType.VACATION) {
             VacationDocumentResponse document = documentClient.getVacationDocument(payload.id());
 
-            log.debug("document - {}", document);
+            String displaySchedule =
+                user.username() + " " + user.position().name() + " " + document.vacationType().getDisplayName();
+
+            if (document.vacationSubType() != null) {
+                displaySchedule += " " + document.vacationSubType().getDisplayName();
+            }
+
+            try {
+                calendarProvider.addEvent(displaySchedule, document.startDate(), document.endDate());
+            } catch (Exception e) {
+                log.warn("Failed add google calendar - {}", e.getMessage());
+            }
+
         }
 
     }
