@@ -51,7 +51,7 @@ public class DocumentApprovedCommandHandler implements CommandHandler<DocumentAp
                 user.username() + " " + user.position().name() + " " + document.vacationType().getDisplayName();
 
             if (document.vacationSubType() != null) {
-                displaySchedule += " " + document.vacationSubType().getDisplayName();
+                displaySchedule += "(" + document.vacationSubType().getDisplayName() + ")";
             }
 
             try {
@@ -78,9 +78,9 @@ public class DocumentApprovedCommandHandler implements CommandHandler<DocumentAp
             .append(user.username())
             .append(" ")
             .append(user.position().name())
-            .append("이(가) ")
+            .append("이(가) 신청한")
             .append(type.getDocumentName())
-            .append("을(를) 승인되었습니다.");
+            .append(" 문서가 승인되었습니다.");
 
         return builder.toString();
     }

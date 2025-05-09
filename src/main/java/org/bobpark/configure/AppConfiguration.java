@@ -11,6 +11,7 @@ import com.malgn.notification.client.NotificationClient;
 
 import org.bobpark.configure.properties.AppProperties;
 import org.bobpark.domain.document.command.handler.DocumentApprovedCommandHandler;
+import org.bobpark.domain.document.command.handler.DocumentCanceledCommandHandler;
 import org.bobpark.domain.document.command.handler.DocumentRejectedCommandHandler;
 import org.bobpark.domain.document.command.handler.DocumentRequestedCommandHandler;
 import org.bobpark.domain.document.feign.DocumentFeignClient;
@@ -36,6 +37,7 @@ public class AppConfiguration {
         handler.add(new DocumentRequestedCommandHandler(notificationClient, userClient));
         handler.add(new DocumentApprovedCommandHandler(notificationClient, userClient, documentClient, googleCalendarProvider()));
         handler.add(new DocumentRejectedCommandHandler(notificationClient, userClient));
+        handler.add(new DocumentCanceledCommandHandler(notificationClient, userClient));
 
         return handler;
     }

@@ -16,7 +16,8 @@ public enum DocumentEventType implements EventType {
 
     DOCUMENT_REQUESTED("documents", "DOCUMENT_REQUESTED", DocumentRequestedEventPayload.class),
     DOCUMENT_APPROVED("documents", "DOCUMENT_APPROVED", DocumentApprovedEventPayload.class),
-    DOCUMENT_REJECTED("documents", "DOCUMENT_REJECTED", DocumentRejectedEventPayload.class);
+    DOCUMENT_REJECTED("documents", "DOCUMENT_REJECTED", DocumentRejectedEventPayload.class),
+    DOCUMENT_CANCELED("documents", "DOCUMENT_CANCELED", DocumentCanceledEventPayload.class);
 
 
     private final String topic;
