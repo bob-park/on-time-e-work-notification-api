@@ -78,7 +78,7 @@ public class DocumentApprovedCommandHandler implements CommandHandler<DocumentAp
             .append(user.username())
             .append(" ")
             .append(user.position().name())
-            .append("이(가) 신청한")
+            .append("이(가) 신청하신 ")
             .append(type.getDocumentName())
             .append(" 문서가 승인되었습니다.");
 
