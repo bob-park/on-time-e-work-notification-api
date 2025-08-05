@@ -10,7 +10,6 @@ import com.malgn.notification.model.SendNotificationMessageRequest;
 
 import org.bobpark.domain.document.event.DocumentCanceledEventPayload;
 import org.bobpark.domain.document.event.DocumentEventType;
-import org.bobpark.domain.document.event.DocumentRejectedEventPayload;
 import org.bobpark.domain.document.type.DocumentType;
 import org.bobpark.domain.user.feign.UserFeignClient;
 import org.bobpark.domain.user.model.UserResponse;
@@ -48,7 +47,7 @@ public class DocumentCanceledCommandHandler implements CommandHandler<DocumentCa
 
         StringBuilder builder = new StringBuilder();
 
-        builder.append(user.team().name())
+        builder.append(user.group().name())
             .append(" ")
             .append(user.username())
             .append(" ")

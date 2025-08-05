@@ -73,7 +73,7 @@ public class DocumentApprovedCommandHandler implements CommandHandler<DocumentAp
 
         StringBuilder builder = new StringBuilder();
 
-        builder.append(user.team().name())
+        builder.append(user.group().name())
             .append(" ")
             .append(user.username())
             .append(" ")

@@ -8,7 +8,6 @@ import com.malgn.cqrs.event.handler.CommandHandler;
 import com.malgn.notification.client.NotificationClient;
 import com.malgn.notification.model.SendNotificationMessageRequest;
 
-import org.bobpark.domain.document.event.DocumentApprovedEventPayload;
 import org.bobpark.domain.document.event.DocumentEventType;
 import org.bobpark.domain.document.event.DocumentRejectedEventPayload;
 import org.bobpark.domain.document.type.DocumentType;
@@ -48,7 +47,7 @@ public class DocumentRejectedCommandHandler implements CommandHandler<DocumentRe
 
         StringBuilder builder = new StringBuilder();
 
-        builder.append(user.team().name())
+        builder.append(user.group().name())
             .append(" ")
             .append(user.username())
             .append(" ")

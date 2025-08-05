@@ -48,7 +48,7 @@ public class DocumentRequestedCommandHandler implements CommandHandler<DocumentR
 
         StringBuilder builder = new StringBuilder();
 
-        builder.append(user.team().name())
+        builder.append(user.group().name())
             .append(" ")
             .append(user.username())
             .append(" ")
