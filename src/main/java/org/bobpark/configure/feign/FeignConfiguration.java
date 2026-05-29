@@ -12,8 +12,13 @@ import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.client.RestTemplate;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHeaders;
 
 import com.google.common.collect.Maps;
@@ -23,12 +28,13 @@ import feign.RequestInterceptor;
 import com.malgn.auth.client.AuthClient;
 import com.malgn.auth.context.AuthContext;
 import com.malgn.auth.context.AuthContextHolder;
+import com.malgn.auth.context.KeyFlowPrincipal;
 
 @RequiredArgsConstructor
 @Configuration
 public class FeignConfiguration {
 
-    private final AuthClient client;
+    private final AuthClient authClient;
 
     @Bean
     @LoadBalanced
@@ -48,17 +54,43 @@ public class FeignConfiguration {
 
         Map<String, Collection<String>> headers = Maps.newHashMap();
 
-        AuthContext context = AuthContextHolder.getCurrentContext();
+        String accessToken = null;
 
-        if (context == null || context.getPrincipal().isExpired()) {
-            client.token();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+
+            Jwt jwt = (Jwt)authentication.getPrincipal();
+
+            accessToken = jwt.getTokenValue();
         }
 
-        headers.put(HttpHeaders.AUTHORIZATION,
-            Collections.singletonList("Bearer " + context.getPrincipal().getAccessToken()));
+        if (StringUtils.isBlank(accessToken)) {
+            accessToken = getAccessToken();
+        }
+
+        if (StringUtils.isNotBlank(accessToken)) {
+            headers.put(HttpHeaders.AUTHORIZATION, Collections.singletonList("Bearer " + accessToken));
+        }
+
         headers.put(HttpHeaders.CONTENT_TYPE, Collections.singletonList(MediaType.APPLICATION_JSON_VALUE));
         headers.put(HttpHeaders.ACCEPT, Collections.singletonList(MediaType.APPLICATION_JSON_VALUE));
 
         return headers;
+    }
+
+    private String getAccessToken() {
+        AuthContext currentContext = AuthContextHolder.getCurrentContext();
+
+        KeyFlowPrincipal principal = currentContext != null ? currentContext.getPrincipal() : null;
+
+        if (principal == null || principal.isExpired()) {
+            authClient.token();
+
+            currentContext = AuthContextHolder.getCurrentContext();
+            principal = currentContext.getPrincipal();
+        }
+
+        return principal.getAccessToken();
     }
 }
