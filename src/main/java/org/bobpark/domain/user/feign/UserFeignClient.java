@@ -9,6 +9,6 @@ import org.bobpark.domain.user.model.UserResponse;
 @FeignClient(name = "auth-user-api", contextId = "auth-user-api")
 public interface UserFeignClient {
 
-    @GetMapping(path = "api/v1/users/{uniqueId}")
+    @GetMapping(path = "api/v1/users/{uniqueId}/summary")
     UserResponse getUser(@PathVariable String uniqueId);
 }
