@@ -1,8 +1,10 @@
 package org.bobpark.domain.user.model;
 
+import java.util.List;
+
 public record UserResponse(String id,
                            String userId,
                            String username,
-                           TeamResponse group,
+                           List<UserGroupResponse> groups,
                            PositionResponse position) {
 }

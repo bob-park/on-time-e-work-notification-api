@@ -12,6 +12,7 @@ import org.bobpark.domain.document.event.DocumentCanceledEventPayload;
 import org.bobpark.domain.document.event.DocumentEventType;
 import org.bobpark.domain.document.type.DocumentType;
 import org.bobpark.domain.user.feign.UserFeignClient;
+import org.bobpark.domain.user.model.TeamResponse;
 import org.bobpark.domain.user.model.UserResponse;
 
 @Slf4j
@@ -47,7 +48,9 @@ public class DocumentCanceledCommandHandler implements CommandHandler<DocumentCa
 
         StringBuilder builder = new StringBuilder();
 
-        builder.append(user.group().name())
+        TeamResponse group = user.groups().getFirst().group();
+
+        builder.append(group.name())
             .append(" ")
             .append(user.username())
             .append(" ")
